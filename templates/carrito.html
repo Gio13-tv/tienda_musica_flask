@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito - Musica</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* (Mismos estilos del navbar) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: #1a1a1a;
+            color: white;
+            padding: 1.2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2em;
+            font-weight: bold;
+            color: white;
+            letter-spacing: 1px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95em;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: #ff6b6b;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-icons a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.3em;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-icons a:hover {
+            transform: scale(1.1);
+        }
+
+        #cart-count {
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7em;
+            margin-left: 2px;
+        }
+
+        /* CARRITO SECTION */
+        .carrito-section {
+            padding: 80px 0;
+            background: white;
+            min-height: 70vh;
+        }
+
+        .carrito-section h2 {
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 50px;
+            color: #2c3e50;
+        }
+
+        .carrito-item {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item-info h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .item-info p {
+            color: #555;
+            margin: 5px 0;
+        }
+
+        .btn-eliminar {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.3s ease;
+        }
+
+        .btn-eliminar:hover {
+            background: #c0392b;
+        }
+
+        .carrito-total {
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+        }
+
+        .carrito-total h3 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .btn-comprar {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-comprar:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">Musica.</h1>
+            <ul class="nav-menu">
+                <li><a href="/">INICIO</a></li>
+                <li><a href="/sobre">SOBRE</a></li>
+                <li><a href="/productos">PRODUCTOS</a></li>
+                <li><a href="/resenas">RESEÑAS</a></li>
+                <li><a href="/contacto">CONTACTO</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="#" class="icon">❤️</a>
+                <a href="/carrito" class="icon">🛒 <span id="cart-count">0</span></a>
+                <a href="#" class="icon">👤</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="carrito-section">
+        <div class="container">
+            <h2>Tu Carrito de Compras</h2>
+            <div id="carrito-items">
+                <p>Cargando carrito...</p>
+            </div>
+            <div class="carrito-total">
+                <h3>Total: $<span id="total">0.00</span></h3>
+                <button class="btn-comprar">Proceder al Pago</button>
+            </div>
+        </div>
+    </section>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarCarrito();
+        });
+    </script>
+</body>
+</html>

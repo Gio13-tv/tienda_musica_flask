@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reseñas - Musica</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* (Mismos estilos del navbar) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background: #1a1a1a;
+            color: white;
+            padding: 1.2rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2em;
+            font-weight: bold;
+            color: white;
+            letter-spacing: 1px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95em;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: #ff6b6b;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-icons a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.3em;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-icons a:hover {
+            transform: scale(1.1);
+        }
+
+        #cart-count {
+            background: #ff6b6b;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.7em;
+            margin-left: 2px;
+        }
+
+        /* RESEÑAS SECTION */
+        .resenas-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .resenas-section h2 {
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 50px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .resenas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+
+        .resena-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .resena-text {
+            font-size: 1.1em;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .cliente-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .cliente-avatar {
+            width: 50px;
+            height: 50px;
+            background: #667eea;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .cliente-details h4 {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .cliente-details p {
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1 class="logo">Musica.</h1>
+            <ul class="nav-menu">
+                <li><a href="/">INICIO</a></li>
+                <li><a href="/sobre">SOBRE</a></li>
+                <li><a href="/productos">PRODUCTOS</a></li>
+                <li><a href="/resenas">RESEÑAS</a></li>
+                <li><a href="/contacto">CONTACTO</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="#" class="icon">❤️</a>
+                <a href="/carrito" class="icon">🛒 <span id="cart-count">0</span></a>
+                <a href="#" class="icon">👤</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="resenas-section">
+        <div class="container">
+            <h2>Reseñas de Compradores</h2>
+            <div class="resenas-grid">
+                <div class="resena-card">
+                    <p class="resena-text">
+                        "Increíble tienda, tienen una colección vasta que va desde los clásicos imprescindibles hasta rarezas que no encuentras en ningún otro lado. Siempre que voy paso horas revisando cada sección. Los precios son justos y el estado de los vinilos y CDs es exactamente como lo describen."
+                    </p>
+                    <div class="cliente-info">
+                        <div class="cliente-avatar">L</div>
+                        <div class="cliente-details">
+                            <h4>Levi Ackerman</h4>
+                            <p>Cliente Satisfecho</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resena-card">
+                    <p class="resena-text">
+                        "Lo que más me gusta de este lugar es la pasión que le ponen. Los empleados no solo te atienden, son verdaderos expertos. Le comenté al encargado que me estaba iniciando en el pop y me recomendó tres discos perfectos para empezar. ¡Acertó con todos! Es ese trato personalizado lo que hace que siempre regrese."
+                    </p>
+                    <div class="cliente-info">
+                        <div class="cliente-avatar">B</div>
+                        <div class="cliente-details">
+                            <h4>Britney Spears</h4>
+                            <p>Cliente Satisfecho</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="resena-card">
+                    <p class="resena-text">
+                        "Compré una edición limitada en su página web y el proceso fue impecable. El disco llegó antes de lo esperado, empaquetado con un cuidado excepcional para que no sufriera ningún daño durante el envío. La comunicación fue clara en todo momento. Definitivamente confiaré en ellos para mis próximos pedidos."
+                    </p>
+                    <div class="cliente-info">
+                        <div class="cliente-avatar">T</div>
+                        <div class="cliente-details">
+                            <h4>Tokito Katajan</h4>
+                            <p>Cliente Satisfecho</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
