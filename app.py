@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify, session
 import pyodbc
+from decimal import Decimal
 
 app = Flask(__name__)
 app.secret_key = 'clave_secreta_musica_2024'
@@ -14,7 +15,6 @@ DB_CONFIG = {
 }
 
 def get_db_connection():
-    """Conecta a SQL Server"""
     try:
         conn_str = (
             f"DRIVER={DB_CONFIG['driver']};"
@@ -46,25 +46,19 @@ def productos():
         
         cursor = conn.cursor()
         cursor.execute("SELECT id, nombre, precio, imagen FROM productos")
-        productos = cursor.fetchall()
-        conn.close()
         
-        print(f"Productos encontrados: {len(productos)}")
+        raw_productos = cursor.fetchall()
+        conn.close()
+
+        productos = []
+        for row in raw_productos:
+            producto_id, nombre, precio_decimal, imagen = row
+            precio_float = float(precio_decimal) if isinstance(precio_decimal, Decimal) else precio_decimal
+            productos.append((producto_id, nombre, precio_float, imagen))
+        
         return render_template('productos.html', productos=productos)
     except Exception as e:
-        return f"Error al cargar productos: {str(e)}"
-
-@app.route('/resenas')
-def resenas():
-    return render_template('resenas.html')
-
-@app.route('/contacto')
-def contacto():
-    return render_template('contacto.html')
-
-@app.route('/carrito')
-def ver_carrito():
-    return render_template('carrito.html')
+        return f"Error al cargar productos: {str(e)}", 500
 
 # ========== API PARA EL CARRITO ==========
 @app.route('/ajax/agregar_carrito', methods=['POST'])
@@ -74,7 +68,6 @@ def agregar_carrito():
         producto_id = int(data.get('producto_id'))
         cantidad = int(data.get('cantidad', 1))
         
-        # Obtener producto de la BD
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("SELECT id, nombre, precio, imagen FROM productos WHERE id = ?", (producto_id,))
@@ -84,28 +77,26 @@ def agregar_carrito():
         if not producto:
             return jsonify({'success': False, 'message': 'Producto no encontrado'}), 404
         
-        # Inicializar carrito en sesión
         if 'carrito' not in session:
             session['carrito'] = []
         
         carrito = session['carrito']
         encontrado = False
         
-        # Buscar si el producto ya está en el carrito
         for item in carrito:
             if item['id'] == producto_id:
                 item['cantidad'] += cantidad
                 encontrado = True
                 break
         
-        # Si no está, agregarlo
         if not encontrado:
+            precio = float(producto[2])
             carrito.append({
-                'id': producto[0],  # id
-                'nombre': producto[1],  # nombre
-                'precio': float(producto[2]),  # precio
+                'id': producto[0], 
+                'nombre': producto[1], 
+                'precio': precio, 
                 'cantidad': cantidad,
-                'imagen': producto[3]  # imagen
+                'imagen': producto[3]
             })
         
         session['carrito'] = carrito
@@ -117,12 +108,12 @@ def agregar_carrito():
             'total_items': sum(item['cantidad'] for item in carrito)
         })
     except Exception as e:
-        return jsonify({'success': False, 'message': str(e)}), 500
+        return jsonify({'success': False, 'message': 'Error interno'}), 500
 
 @app.route('/ajax/obtener_carrito', methods=['GET'])
 def obtener_carrito():
     carrito = session.get('carrito', [])
-    total = sum(item['precio'] * item['cantidad'] for item in carrito)
+    total = sum(item['precio'] * item['cantidad'] for item in carrito) 
     return jsonify({
         'success': True,
         'carrito': carrito,
@@ -139,10 +130,22 @@ def eliminar_carrito():
         if 'carrito' in session:
             session['carrito'] = [item for item in session['carrito'] if item['id'] != producto_id]
             session.modified = True
-            return jsonify({'success': True, 'message': 'Producto eliminado del carrito'})
+            return jsonify({'success': True, 'message': 'Producto eliminado'})
         return jsonify({'success': False, 'message': 'Carrito vacío'}), 400
     except Exception as e:
         return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/resenas')
+def resenas():
+    return render_template('resenas.html')
+
+@app.route('/contacto')
+def contacto():
+    return render_template('contacto.html')
+
+@app.route('/carrito')
+def ver_carrito():
+    return render_template('carrito.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

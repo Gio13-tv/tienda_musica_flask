@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productos - Musica</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -106,23 +107,33 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .productos-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 35px;
-            margin-top: 30px;
+        /* CARRUSEL DE PRODUCTOS */
+        .carrusel-container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        .carrusel {
+            display: flex;
+            transition: transform 0.5s ease;
+            gap: 25px;
+            padding: 10px 0;
         }
 
         /* TARJETA DE PRODUCTO ESTILO PDF */
         .producto-card {
             background: white;
             border-radius: 15px;
-            padding: 25px;
+            padding: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             text-align: center;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            min-width: 280px;
+            flex-shrink: 0;
         }
 
         .producto-card:hover {
@@ -144,12 +155,13 @@
             z-index: 2;
         }
 
+        /* IMAGEN CUADRADA */
         .producto-card img {
             width: 100%;
-            height: 220px;
+            height: 200px;
             object-fit: cover;
             border-radius: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             transition: transform 0.3s ease;
         }
 
@@ -160,10 +172,10 @@
         .producto-card h3 {
             color: #2c3e50;
             margin: 15px 0;
-            font-size: 1.3em;
+            font-size: 1.2em;
             font-weight: 600;
             line-height: 1.4;
-            min-height: 60px;
+            min-height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -171,25 +183,25 @@
 
         /* PRECIOS ESTILO PDF */
         .precio-container {
-            margin: 20px 0;
+            margin: 15px 0;
         }
 
         .precio-original {
-            font-size: 1.1em;
+            font-size: 1em;
             color: #7f8c8d;
             text-decoration: line-through;
             margin-bottom: 5px;
         }
 
         .precio {
-            font-size: 1.8em;
+            font-size: 1.6em;
             font-weight: bold;
             color: #2c3e50;
         }
 
         .precio-descuento {
             color: #e74c3c;
-            font-size: 1.8em;
+            font-size: 1.6em;
         }
 
         /* BOTÓN ESTILO PDF */
@@ -197,10 +209,10 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 12px 25px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 1.1em;
+            font-size: 1em;
             font-weight: 600;
             width: 100%;
             transition: all 0.3s ease;
@@ -212,6 +224,40 @@
             background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(118, 75, 162, 0.4);
+        }
+
+        /* BOTONES DE NAVEGACIÓN DEL CARRUSEL */
+        .carrusel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            color: #764ba2;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .carrusel-btn:hover {
+            background: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carrusel-btn.prev {
+            left: 10px;
+        }
+
+        .carrusel-btn.next {
+            right: 10px;
         }
 
         /* MENSAJE SIN PRODUCTOS */
@@ -240,19 +286,46 @@
             z-index: 2;
         }
 
+        /* INDICADORES DEL CARRUSEL */
+        .carrusel-indicadores {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .indicador {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .indicador.active {
+            background: white;
+            transform: scale(1.2);
+        }
+
         /* RESPONSIVE */
         @media (max-width: 768px) {
             .nav-menu {
                 gap: 1.5rem;
             }
             
-            .productos-grid {
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-                gap: 25px;
-            }
-            
             .productos-section h2 {
                 font-size: 2.5em;
+            }
+            
+            .producto-card {
+                min-width: 250px;
+            }
+            
+            .carrusel-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.2em;
             }
         }
     </style>
@@ -281,41 +354,59 @@
             <h2>Últimos Productos</h2>
             
             {% if productos %}
-            <div class="productos-grid">
-                {% for producto in productos %}
-                <div class="producto-card">
-                    <!-- Etiqueta de descuento fija -->
-                    <div class="descuento">
-                        -{{ [5, 10, 15, 20, 25, 30, 40, 50][loop.index0 % 8] }}%
-                    </div>
-                    
-                    <!-- Etiqueta nuevo para algunos productos -->
-                    {% if loop.index <= 3 %}
-                    <div class="nuevo">NUEVO</div>
-                    {% endif %}
-                    
-                    <img src="{{ url_for('static', filename='images/' + producto[3]) }}" 
-                         alt="{{ producto[1] }}" 
-                         <img src="{{ url_for('static', filename='images/' ~ producto[0]) }}">
-                    
-                    <h3>{{ producto[1] }}</h3>
-                    
-                    <div class="precio-container">
-                        <!-- Precio original tachado -->
-                        <div class="precio-original">
-                            ${{ "%.2f"|format(producto[2] * 1.3) }}
+            <div class="carrusel-container">
+                <button class="carrusel-btn prev">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                
+                <div class="carrusel">
+                    {% for producto in productos %}
+                    <div class="producto-card">
+                        <!-- Etiqueta de descuento fija -->
+                        <div class="descuento">
+                            -{{ [5, 10, 15, 20, 25, 30, 40, 50][loop.index0 % 8] }}%
                         </div>
-                        <!-- Precio con descuento -->
-                        <div class="precio precio-descuento">
-                            ${{ "%.2f"|format(producto[2]) }}
+                        
+                        <!-- Etiqueta nuevo para algunos productos -->
+                        {% if loop.index <= 3 %}
+                        <div class="nuevo">NUEVO</div>
+                        {% endif %}
+                        
+                        <!-- IMAGEN - producto[3] -->
+                        <img src="{{ url_for('static', filename='images/' + producto[3]) }}" 
+                             alt="{{ producto[1] }}"
+                             onerror="this.src='{{ url_for('static', filename='images/') }}'">
+                        
+                        <!-- NOMBRE - producto[1] -->
+                        <h3>{{ producto[1] }}</h3>
+                        
+                        <div class="precio-container">
+                            <!-- Precio original tachado -->
+                            <div class="precio-original">
+                                ${{ "%.2f"|format(producto[2] * 1.3) }}
+                            </div>
+                            <!-- Precio con descuento - producto[2] -->
+                            <div class="precio precio-descuento">
+                                ${{ "%.2f"|format(producto[2]) }}
+                            </div>
                         </div>
+                        
+                        <!-- BOTÓN - producto[0] -->
+                        <button class="btn-agregar" onclick="agregarAlCarrito({{ producto[0] }})">
+                            🛒 Agregar al Carrito
+                        </button>
                     </div>
-                    
-                    <p>${{ producto[2]|round(2) }}</p>
-                        🛒 Agregar al Carrito
-                    </button>
+                    {% endfor %}
                 </div>
-                {% endfor %}
+                
+                <button class="carrusel-btn next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                
+                <!-- Indicadores del carrusel -->
+                <div class="carrusel-indicadores" id="indicadores">
+                    <!-- Los indicadores se generan dinámicamente con JavaScript -->
+                </div>
             </div>
             {% else %}
             <div class="no-productos">
@@ -326,6 +417,147 @@
         </div>
     </section>
 
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        // Funcionalidad para el carrito
+        function agregarAlCarrito(productoId) {
+            console.log('Agregando producto ID:', productoId);
+            
+            fetch('/ajax/agregar_carrito', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    producto_id: productoId,
+                    cantidad: 1
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('✅ ' + data.message);
+                    actualizarContadorCarrito();
+                } else {
+                    alert('❌ Error: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('❌ Error al agregar al carrito');
+            });
+        }
+
+        // Actualizar contador del carrito
+        function actualizarContadorCarrito() {
+            fetch('/ajax/obtener_carrito')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const cartCount = document.getElementById('cart-count');
+                        if (cartCount) {
+                            cartCount.textContent = data.total_items;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al obtener carrito:', error);
+                });
+        }
+
+        // Funcionalidad del carrusel
+        document.addEventListener('DOMContentLoaded', function() {
+            const carrusel = document.querySelector('.carrusel');
+            const productos = document.querySelectorAll('.producto-card');
+            const btnPrev = document.querySelector('.carrusel-btn.prev');
+            const btnNext = document.querySelector('.carrusel-btn.next');
+            const indicadoresContainer = document.getElementById('indicadores');
+            
+            if (productos.length === 0) return;
+            
+            // Calcular cuántos productos caben en pantalla
+            let productosPorPagina = 4;
+            if (window.innerWidth < 768) {
+                productosPorPagina = 2;
+            }
+            
+            // Calcular el número total de páginas
+            const totalPaginas = Math.ceil(productos.length / productosPorPagina);
+            
+            // Generar indicadores
+            for (let i = 0; i < totalPaginas; i++) {
+                const indicador = document.createElement('div');
+                indicador.classList.add('indicador');
+                if (i === 0) indicador.classList.add('active');
+                indicador.addEventListener('click', () => irAPagina(i));
+                indicadoresContainer.appendChild(indicador);
+            }
+            
+            let paginaActual = 0;
+            
+            // Función para mover el carrusel
+            function moverCarrusel() {
+                const productoWidth = productos[0].offsetWidth + 25; // Ancho + gap
+                const desplazamiento = -(paginaActual * productosPorPagina * productoWidth);
+                carrusel.style.transform = `translateX(${desplazamiento}px)`;
+                
+                // Actualizar indicadores
+                document.querySelectorAll('.indicador').forEach((indicador, index) => {
+                    indicador.classList.toggle('active', index === paginaActual);
+                });
+            }
+            
+            // Función para ir a una página específica
+            function irAPagina(pagina) {
+                paginaActual = pagina;
+                moverCarrusel();
+            }
+            
+            // Eventos para los botones de navegación
+            btnPrev.addEventListener('click', () => {
+                if (paginaActual > 0) {
+                    paginaActual--;
+                    moverCarrusel();
+                }
+            });
+            
+            btnNext.addEventListener('click', () => {
+                if (paginaActual < totalPaginas - 1) {
+                    paginaActual++;
+                    moverCarrusel();
+                }
+            });
+            
+            // Ajustar productos por página al cambiar el tamaño de la ventana
+            window.addEventListener('resize', () => {
+                productosPorPagina = window.innerWidth < 768 ? 2 : 4;
+                const nuevasPaginas = Math.ceil(productos.length / productosPorPagina);
+                
+                // Actualizar indicadores si es necesario
+                if (nuevasPaginas !== totalPaginas) {
+                    indicadoresContainer.innerHTML = '';
+                    for (let i = 0; i < nuevasPaginas; i++) {
+                        const indicador = document.createElement('div');
+                        indicador.classList.add('indicador');
+                        if (i === 0) indicador.classList.add('active');
+                        indicador.addEventListener('click', () => irAPagina(i));
+                        indicadoresContainer.appendChild(indicador);
+                    }
+                }
+                
+                // Asegurarse de que la página actual sea válida
+                if (paginaActual >= nuevasPaginas) {
+                    paginaActual = nuevasPaginas - 1;
+                }
+                
+                moverCarrusel();
+            });
+            
+            // Inicializar carrusel
+            moverCarrusel();
+            
+            // Inicializar contador del carrito
+            actualizarContadorCarrito();
+        });
+    </script>
 </body>
 </html>

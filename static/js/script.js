@@ -53,7 +53,7 @@ function cargarCarrito() {
             if (!container) return;
             
             if (!data.success || data.carrito.length === 0) {
-                container.innerHTML = '<p>Tu carrito está vacío</p>';
+                container.innerHTML = '<div class="carrito-vacio"><p>🎵 Tu carrito está vacío</p><p>¡Descubre nuestros productos!</p></div>';
                 if (document.getElementById('total')) {
                     document.getElementById('total').textContent = '0.00';
                 }
@@ -76,7 +76,7 @@ function cargarCarrito() {
                         </div>
                         <div class="item-controls">
                             <button class="btn-eliminar" onclick="eliminarDelCarrito(${item.id})">
-                                Eliminar
+                                ❌ Eliminar
                             </button>
                         </div>
                     </div>
@@ -95,7 +95,7 @@ function cargarCarrito() {
             console.error('Error al cargar carrito:', error);
             const container = document.getElementById('carrito-items');
             if (container) {
-                container.innerHTML = '<p>Error al cargar el carrito</p>';
+                container.innerHTML = '<div class="carrito-vacio"><p>❌ Error al cargar el carrito</p></div>';
             }
         });
 }
