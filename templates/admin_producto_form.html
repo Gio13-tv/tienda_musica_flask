@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ modo|capitalize }} Producto</title>
+
+    <style>
+        body { background:#f4f2ff; font-family:Arial; }
+        .container {
+            width:450px;
+            margin:50px auto;
+            padding:25px;
+            background:white;
+            border-radius:20px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.2);
+        }
+        input {
+            width:100%;
+            padding:12px;
+            margin:8px 0;
+            border-radius:10px;
+            border:1px solid #bbb;
+        }
+        button {
+            width:100%;
+            background:#764ba2;
+            padding:12px;
+            border:none;
+            color:white;
+            border-radius:12px;
+            cursor:pointer;
+        }
+        img {
+            margin-top:10px;
+            display:block;
+            max-width:150px;
+            border-radius:10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>{{ modo|capitalize }} Producto</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <label>Nombre</label>
+        <input type="text" name="nombre" required value="{{ producto.nombre if producto }}">
+
+        <label>Precio</label>
+        <input type="number" step="0.01" name="precio" required value="{{ producto.precio if producto }}">
+
+        <label>Imagen</label>
+        <input type="file" name="imagen_archivo">
+
+        {% if producto %}
+        <p>Imagen actual:</p>
+        <img src="{{ url_for('static', filename='images/' + producto.imagen) }}">
+        {% endif %}
+
+        <button>Guardar</button>
+    </form>
+
+    <a href="{{ url_for('admin_productos') }}">← Volver</a>
+</div>
+
+</body>
+</html>

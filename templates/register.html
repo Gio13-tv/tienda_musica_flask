@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear cuenta</title>
+
+    <style>
+        body {
+            background: #f4f2ff;
+            font-family: Arial;
+        }
+        .container {
+            width: 450px;
+            margin: 50px auto;
+            padding: 25px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 15px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #764ba2;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        a {
+            text-decoration: none;
+            color: #764ba2;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Crear Cuenta</h2>
+
+    <form method="POST">
+
+        <label>Nombre:</label>
+        <input type="text" name="nombre" required>
+
+        <label>Email:</label>
+        <input type="email" name="email" required>
+
+        <label>Contraseña:</label>
+        <input type="password" name="password" required>
+
+        <label>Tipo de cuenta:</label>
+        <select name="rol">
+            <option value="cliente">Cliente</option>
+            <option value="admin">Administrador</option>
+        </select>
+
+        <button>Registrar</button>
+    </form>
+
+    <br>
+    <a href="/login">¿Ya tienes cuenta? Iniciar sesión</a>
+</div>
+
+</body>
+</html>

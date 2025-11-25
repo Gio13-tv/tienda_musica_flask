@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de Orden</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        body { background:#f4f4f4; font-family:Arial; }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        h1 { text-align:center; margin-bottom:20px; }
+
+        table {
+            width:100%;
+            border-collapse: collapse;
+            margin-top:20px;
+        }
+
+        th, td {
+            padding:12px;
+            border-bottom:1px solid #ddd;
+            text-align:center;
+        }
+
+        th {
+            background:#667eea;
+            color:white;
+        }
+
+        .btn-back {
+            display:inline-block;
+            padding:10px 15px;
+            background:#764ba2;
+            color:white;
+            border-radius:8px;
+            text-decoration:none;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Detalle de la Orden #{{ orden_id }}</h1>
+
+    <a href="{{ url_for('admin_ordenes') }}" class="btn-back">
+        <i class="fa fa-arrow-left"></i> Volver
+    </a>
+
+    <table>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+        </tr>
+
+        {% for d in detalles %}
+        <tr>
+            <td>{{ d[0] }}</td>
+            <td>{{ d[1] }}</td>
+            <td>${{ "%.2f"|format(d[2]) }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Compra realizada</title>
+
+<style>
+body {
+    background: #f4f4f4;
+    font-family: Arial, sans-serif;
+}
+
+.box {
+    max-width: 600px;
+    margin: 80px auto;
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+h1 {
+    color: #764ba2;
+    font-size: 2.3rem;
+    margin-bottom: 15px;
+}
+
+p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.btn {
+    background: #764ba2;
+    color: white;
+    padding: 14px 25px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    text-decoration: none;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+    <h1>¡Gracias por tu compra! 🎉</h1>
+    <p>Tu orden ha sido generada correctamente.</p>
+    <p><strong>Número de orden:</strong> {{ orden_id }}</p>
+
+    <a href="/productos" class="btn">Seguir comprando</a>
+</div>
+
+</body>
+</html>

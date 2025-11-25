@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Órdenes - Panel Admin</title>
+
+    <style>
+        body {
+            background: #f4f4f4;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+        }
+
+        a.back {
+            text-decoration: none;
+            color: #764ba2;
+            font-size: 1rem;
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        .orders-table th, .orders-table td {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .orders-table th {
+            background: #764ba2;
+            color: white;
+            font-size: 1.1rem;
+        }
+
+        .orders-table tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+
+        .orders-table tr:hover {
+            background: #e4d5f2;
+        }
+
+        .btn-detalle {
+            background: #764ba2;
+            color: white;
+            padding: 8px 15px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .btn-detalle:hover {
+            background: #5e3d8e;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <a href="/admin" class="back">← Volver al panel</a>
+
+    <h1>Órdenes registradas</h1>
+
+    <table class="orders-table">
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Detalle</th>
+        </tr>
+
+        {% for o in ordenes %}
+        <tr>
+            <td>{{ o[0] }}</td>
+            <td>{{ o[1] }}</td>
+            <td>{{ o[2] }}</td>
+            <td>${{ "%.2f"|format(o[3]) }}</td>
+            <td>
+                <a href="/admin/ordenes/{{ o[0] }}" class="btn-detalle">Ver</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+</body>
+</html>
